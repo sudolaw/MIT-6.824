@@ -1,12 +1,16 @@
 package mr
 
-import "fmt"
-import "log"
-import "net/rpc"
-import "hash/fnv"
+import (
+	"fmt"
+	"hash/fnv"
+	"log"
+	"net/rpc"
+	"os"
+	"plugin"
+	"time"
+)
 
-
-//
+//KeyValue is knfdlk
 // Map functions return a slice of KeyValue.
 //
 type KeyValue struct {
@@ -24,41 +28,74 @@ func ihash(key string) int {
 	return int(h.Sum32() & 0x7fffffff)
 }
 
-
-//
+//Worker is
 // main/mrworker.go calls this function.
 //
 func Worker(mapf func(string, string) []KeyValue,
 	reducef func(string, []string) string) {
-
+	mapf, reducef = loadPlugin(os.Args[1])
 	// Your worker implementation here.
 
+	jac := true
+	xa := ""
+
+	for jac == true {
+
+		jac, xa = mapcall(xa, mapf)
+		fmt.Printf("recived %v and %v\n", xa, jac)
+		time.Sleep(time.Second)
+
+	}
 	// uncomment to send the Example RPC to the coordinator.
-	// CallExample()
+
+	fmt.Println("********************MAP is Done***************")
 
 }
 
-//
-// example function to show how to make an RPC call to the coordinator.
-//
-// the RPC argument and reply types are defined in rpc.go.
-//
-func CallExample() {
+func mapcall(x string, mapf func(string, string) []KeyValue) (bool, string) {
+
+	//intermediate := []KeyValue{}
+
+	filenam := Saynext(x)
+
+	filename := filenam.Next
+
+	/*file, err := os.Open(filename)
+	if err != nil {
+		log.Fatalf("cannot open %v", filename)
+	}
+	content, err := ioutil.ReadAll(file)
+	if err != nil {
+		log.Fatalf("cannot read %v", filename)
+	}
+	file.Close()
+	kva := mapf(filename, string(content))
+	intermediate = append(intermediate, kva...)*/
+	fmt.Println(filename)
+	return filenam.Bol, filenam.Next
+
+}
+
+//Saynext is lol
+func Saynext(x string) NextReply {
 
 	// declare an argument structure.
-	args := ExampleArgs{}
+	args := NextArgs{}
 
 	// fill in the argument(s).
-	args.X = 99
+	args.Done = x
 
 	// declare a reply structure.
-	reply := ExampleReply{}
+	reply := NextReply{}
 
 	// send the RPC request, wait for the reply.
-	call("Coordinator.Example", &args, &reply)
+	call("Coordinator.Nextex", &args, &reply)
 
 	// reply.Y should be 100.
-	fmt.Printf("reply.Y %v\n", reply.Y)
+	fmt.Printf("reply.Ne %v\n", reply.Next)
+	fmt.Printf("reply.Nnol %v\n", reply.Bol)
+
+	return reply
 }
 
 //
@@ -82,4 +119,23 @@ func call(rpcname string, args interface{}, reply interface{}) bool {
 
 	fmt.Println(err)
 	return false
+}
+
+func loadPlugin(filename string) (func(string, string) []KeyValue, func(string, []string) string) {
+	p, err := plugin.Open(filename)
+	if err != nil {
+		log.Fatalf("cannot load plugin %v", filename)
+	}
+	xmapf, err := p.Lookup("Map")
+	if err != nil {
+		log.Fatalf("cannot find Map in %v", filename)
+	}
+	mapf := xmapf.(func(string, string) []KeyValue)
+	xreducef, err := p.Lookup("Reduce")
+	if err != nil {
+		log.Fatalf("cannot find Reduce in %v", filename)
+	}
+	reducef := xreducef.(func(string, []string) string)
+
+	return mapf, reducef
 }

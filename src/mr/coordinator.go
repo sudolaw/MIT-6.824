@@ -1,15 +1,20 @@
 package mr
 
-import "log"
-import "net"
-import "os"
-import "net/rpc"
-import "net/http"
-
+import (
+	"fmt"
+	"log"
+	"net"
+	"net/http"
+	"net/rpc"
+	"os"
+)
 
 type Coordinator struct {
-	// Your definitions here.
-
+	file       []string
+	sent       []string
+	done       []string
+	number     int
+	waitnumber int
 }
 
 // Your code here -- RPC handlers for the worker to call.
@@ -19,11 +24,38 @@ type Coordinator struct {
 //
 // the RPC argument and reply types are defined in rpc.go.
 //
-func (c *Coordinator) Example(args *ExampleArgs, reply *ExampleReply) error {
-	reply.Y = args.X + 1
+
+//Nextex s nxt
+func (c *Coordinator) Nextex(args *NextArgs, reply *NextReply) error {
+	fmt.Printf("*****************************")
+	fmt.Printf("SENT %v \n", c.waitnumber)
+	fmt.Printf("SUM num%v \n", c.number)
+	fmt.Printf("SUM %v \n", len(c.file))
+	fmt.Printf("Str %v \n", args.Done)
+	if args.Done != "" {
+		c.done = append(c.done, args.Done)
+		fmt.Printf("Done with %v", args.Done)
+		c.waitnumber = c.waitnumber - 1
+		fmt.Println("DONE")
+
+	}
+	if c.number+c.waitnumber == 0 {
+		reply.Bol = false
+	} else if c.number == 0 {
+		reply.Bol = true
+	} else {
+
+		reply.Next = c.file[0]
+		c.sent = append(c.sent, c.file[0])
+		c.waitnumber = c.waitnumber + 1
+		c.number = c.number - 1
+		c.file = c.file[1:]
+		reply.Bol = true
+		fmt.Println("SEND")
+
+	}
 	return nil
 }
-
 
 //
 // start a thread that listens for RPCs from worker.go
@@ -50,7 +82,6 @@ func (c *Coordinator) Done() bool {
 
 	// Your code here.
 
-
 	return ret
 }
 
@@ -62,8 +93,8 @@ func (c *Coordinator) Done() bool {
 func MakeCoordinator(files []string, nReduce int) *Coordinator {
 	c := Coordinator{}
 
-	// Your code here.
-
+	c.file = files
+	c.number = len(files)
 
 	c.server()
 	return &c
