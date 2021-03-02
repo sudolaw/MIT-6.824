@@ -1,12 +1,19 @@
 warning: only one CPU, which may conceal locking bugs
+2021/03/03 00:46:25 [0] Raft started  
+2021/03/03 00:46:25 [1] Raft started  
+2021/03/03 00:46:25 [2] Raft started  
 Test (2A): initial election ...
-checking done  ... Passed --   3.1  3  751   59296    0
-Test (2A): election after network failure ...
---- FAIL: TestReElection2A (0.54s)
-    config.go:395: term 1 has 2 (>1) leaders
-Test (2A): multiple elections ...
---- FAIL: TestManyElections2A (0.47s)
-    config.go:395: term 1 has 2 (>1) leaders
-FAIL
-exit status 1
-FAIL	6.824/raft	4.152s
+2021/03/03 00:46:25 [0] here we go lets start ticker 
+Check one learder started
+2021/03/03 00:46:25 [1] here we go lets start ticker 
+2021/03/03 00:46:25 [2] here we go lets start ticker 
+2021/03/03 00:46:25 [0] election started count is : 0  
+2021/03/03 00:46:25 [0] voted for 0 term 1
+2021/03/03 00:46:25 [0] reply for vote is  : false
+2021/03/03 00:46:25 [2] voted for 0 term 1
+2021/03/03 00:46:25 [0] reply for vote is  : true
+2021/03/03 00:46:25 [1] voted for 0 term 1
+2021/03/03 00:46:25 [0] reply for vote is  : true
+2021/03/03 00:46:25 [0] won elction_____1
+signal: interrupt
+FAIL	6.824/raft	37.881s

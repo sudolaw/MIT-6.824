@@ -41,6 +41,7 @@ import (
 // snapshots) on the applyCh, but set CommandValid to false for these
 // other uses.
 //
+
 type ApplyMsg struct {
 	CommandValid bool
 	Command      interface{}
@@ -56,7 +57,7 @@ type ApplyMsg struct {
 //Dol is
 const Dol = 1
 
-//Dprintf
+//Dprintf is
 func Dprintf(f string, a ...interface{}) (n int, e error) {
 	if Dol > 0 {
 		log.Printf(f, a...)
@@ -87,17 +88,20 @@ type Raft struct {
 
 }
 
-var le_ter sync.Mutex
+var leTer sync.Mutex
 
+//GetState is ...
 // return currentTerm and whether this server
 // believes it is the leader.
 func (rf *Raft) GetState() (int, bool) {
-	le_ter.Lock()
+
+	leTer.Lock()
 	ts.Lock()
 	term := rf.term
 	ts.Unlock()
 	isleader := rf.isLeader
-	le_ter.Unlock()
+	leTer.Unlock()
+
 	// Your code here (2A).
 	return term, isleader
 
@@ -167,7 +171,8 @@ func (rf *Raft) Snapshot(index int, snapshot []byte) {
 //
 type AppendEntryArgs struct {
 	// Your data here (2A, 2B).
-	Index int
+	Index       int
+	Candidateid int
 }
 
 //AppendEntryReply is
@@ -176,20 +181,22 @@ type AppendEntryArgs struct {
 //
 type AppendEntryReply struct {
 	// Your data here (2A).
-
+	Rep bool
 }
 
 var ts sync.Mutex
 
 //AppendEntryReply is
 func (rf *Raft) AppendEntryReply(args *AppendEntryArgs, reply *AppendEntryReply) {
-
-	ts.Lock()
-	rf.timestamp = time.Now()
-	rand := (150 + rand.Intn(150))
-	rf.timep = time.Duration(rand) * time.Millisecond
-	rf.term = args.Index
-	ts.Unlock()
+	if rf.me != args.Candidateid {
+		reply.Rep = true
+		ts.Lock()
+		rf.timestamp = time.Now()
+		rand := (150 + rand.Intn(150))
+		rf.timep = time.Duration(rand) * time.Millisecond
+		rf.term = args.Index
+		ts.Unlock()
+	}
 
 }
 
@@ -201,17 +208,24 @@ func (rf *Raft) AppendEntrymaster(server int, args *AppendEntryArgs, reply *Appe
 
 //AppendEngine is
 func (rf *Raft) AppendEngine() {
-	for x := range rf.peers {
-		go func(xan int) {
-			args := AppendEntryArgs{}
-			ts.Lock()
-			args.Index = rf.term
-			ts.Unlock()
-			reply := AppendEntryReply{}
-			rf.AppendEntrymaster(xan, &args, &reply)
 
-		}(x)
+	for {
+		for x := range rf.peers {
+			ts.Lock()
+			func(xan int) {
+				args := AppendEntryArgs{}
+
+				args.Index = rf.term
+
+				reply := AppendEntryReply{}
+				rf.AppendEntrymaster(xan, &args, &reply)
+
+			}(x)
+			ts.Unlock()
+
+		}
 	}
+
 }
 
 //
@@ -220,8 +234,8 @@ func (rf *Raft) AppendEngine() {
 //
 type RequestVoteArgs struct {
 	// Your data here (2A, 2B).
-	term        int
-	candidateid int
+	Term        int
+	Candidateid int
 }
 
 //
@@ -230,7 +244,7 @@ type RequestVoteArgs struct {
 //
 type RequestVoteReply struct {
 	// Your data here (2A).
-	reply int
+	Reply bool
 }
 
 //
@@ -238,6 +252,13 @@ type RequestVoteReply struct {
 //
 func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 	// Your code here (2A, 2B).
+	if rf.term < args.Term {
+		reply.Reply = true
+	} else {
+		reply.Reply = false
+	}
+
+	Dprintf("[%v] voted for %v term %v", rf.me, args.Candidateid, args.Term)
 }
 
 //
@@ -271,6 +292,7 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 //
 func (rf *Raft) sendRequestVote(server int, args *RequestVoteArgs, reply *RequestVoteReply) bool {
 	ok := rf.peers[server].Call("Raft.RequestVote", args, reply)
+	Dprintf("[%v] reply for vote is  : %v", rf.me, reply.Reply)
 	return ok
 }
 
@@ -289,6 +311,8 @@ func (rf *Raft) sendRequestVote(server int, args *RequestVoteArgs, reply *Reques
 // the leader.
 //
 func (rf *Raft) Start(command interface{}) (int, int, bool) {
+
+	Dprintf("Start started [%v]", rf.me)
 	index := len(rf.LogD)
 	term := rf.term
 	isLeader := rf.isLeader
@@ -322,34 +346,25 @@ func (rf *Raft) killed() bool {
 // The ticker go routine starts a new election if this peer hasn't received
 // heartsbeats recently.
 func (rf *Raft) ticker() {
-	DPrintf("[%v] here we go lets start ticker ", rf.me)
+	Dprintf("[%v] here we go lets start ticker ", rf.me)
 	for rf.killed() == false {
 
 		// Your code here to check if a leader election should
 		// be started and to randomize sleeping time using
 		// time.Sleep().
-		if rf.isLeader == true {
-			func() {
-
-				DPrintf("leader  appned [%v]", rf.me)
-
-				rf.AppendEngine()
-
-			}()
-		}
-
 		func() {
 			jac := time.Now()
 			ts.Lock()
 			diff := jac.Sub(rf.timestamp)
 			if diff > rf.timep && rf.isLeader != true {
+
 				rf.callElection()
 			}
 			ts.Unlock()
 
 		}()
 
-		time.Sleep(5 * time.Millisecond)
+		time.Sleep(50 * time.Millisecond)
 	}
 
 }
@@ -358,18 +373,61 @@ var mu sync.Mutex
 
 // callElection is nothing
 func (rf *Raft) callElection() {
-	DPrintf("election started [%v]", rf.me)
+	leTer.Lock()
+	rf.term = rf.term + 1
+	leTer.Unlock()
+	count := 0
+	finished := 0
 
+	Dprintf("[%v] election started count is : %v  \n", rf.me, count)
+	var elec sync.Mutex
+	cond := sync.NewCond(&elec)
 	for x := range rf.peers {
 		go func(xan int) {
 			args := RequestVoteArgs{}
-			args.term = rf.term
-			args.candidateid = rf.me
+			args.Term = rf.term
+			args.Candidateid = rf.me
 			reply := RequestVoteReply{}
 			rf.sendRequestVote(xan, &args, &reply)
 
+			elec.Lock()
+			defer elec.Unlock()
+			if reply.Reply {
+				count++
+			}
+
+			finished++
+			cond.Broadcast()
+
 		}(x)
+
 	}
+
+	elec.Lock()
+	for count < 2 || finished < 3 {
+		cond.Wait()
+	}
+	if count >= 2 {
+		rf.isLeader = true
+
+		go rf.AppendEngine()
+		Dprintf("[%v] won elction_____%v", rf.me, rf.term)
+
+	} else {
+		leTer.Lock()
+		rf.term = rf.term - 1
+		leTer.Unlock()
+		Dprintf("[%v] lost elction", rf.me)
+
+		ts.Lock()
+		rf.term--
+		rf.timestamp = time.Now()
+		rand := (150 + rand.Intn(150))
+		rf.timep = time.Duration(rand) * time.Millisecond
+
+		ts.Unlock()
+	}
+	elec.Unlock()
 
 }
 
@@ -392,13 +450,15 @@ func Make(peers []*labrpc.ClientEnd, me int,
 	rf.persister = persister
 	rf.me = me
 	rf.term = 0
-	rf.timep = time.Duration((rf.me+1)*20) * time.Millisecond
+	rf.timep = time.Duration((rf.me+1)*200) * time.Millisecond
 	rf.timestamp = time.Now()
 
 	// Your initialization code here (2A, 2B, 2C).
 
 	// initialize from state persisted before a crash
 	rf.readPersist(persister.ReadRaftState())
+
+	Dprintf("[%v] Raft started  \n", rf.me)
 
 	// start ticker goroutine to start elections
 
