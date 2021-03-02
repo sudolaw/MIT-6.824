@@ -8,19 +8,23 @@ package raft
 // test with the original before submitting.
 //
 
-import "6.824/labgob"
-import "6.824/labrpc"
-import "bytes"
-import "log"
-import "sync"
-import "testing"
-import "runtime"
-import "math/rand"
-import crand "crypto/rand"
-import "math/big"
-import "encoding/base64"
-import "time"
-import "fmt"
+import (
+	"bytes"
+	"log"
+	"math/rand"
+	"runtime"
+	"sync"
+	"testing"
+
+	"6.824/labgob"
+	"6.824/labrpc"
+
+	crand "crypto/rand"
+	"encoding/base64"
+	"fmt"
+	"math/big"
+	"time"
+)
 
 func randstring(n int) string {
 	b := make([]byte, 2*n)
@@ -369,13 +373,16 @@ func (cfg *config) setlongreordering(longrel bool) {
 // check that there's exactly one leader.
 // try a few times in case re-elections are needed.
 func (cfg *config) checkOneLeader() int {
+
 	for iters := 0; iters < 10; iters++ {
 		ms := 450 + (rand.Int63() % 100)
 		time.Sleep(time.Duration(ms) * time.Millisecond)
 
 		leaders := make(map[int][]int)
+		DPrintf("config checker")
 		for i := 0; i < cfg.n; i++ {
 			if cfg.connected[i] {
+
 				if term, leader := cfg.rafts[i].GetState(); leader {
 					leaders[term] = append(leaders[term], i)
 				}
@@ -402,6 +409,7 @@ func (cfg *config) checkOneLeader() int {
 
 // check that everyone agrees on the term.
 func (cfg *config) checkTerms() int {
+	DPrintf("checking terms \n")
 	term := -1
 	for i := 0; i < cfg.n; i++ {
 		if cfg.connected[i] {
@@ -555,6 +563,7 @@ func (cfg *config) begin(description string) {
 	cfg.bytes0 = cfg.bytesTotal()
 	cfg.cmds0 = 0
 	cfg.maxIndex0 = cfg.maxIndex
+
 }
 
 // end a Test -- the fact that we got here means there
