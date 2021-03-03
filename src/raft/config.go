@@ -383,7 +383,7 @@ func (cfg *config) checkOneLeader() int {
 
 		for i := 0; i < cfg.n; i++ {
 			if cfg.connected[i] {
-
+				fmt.Printf("checking -------------%v \n", i)
 				if term, leader := cfg.rafts[i].GetState(); leader {
 					leaders[term] = append(leaders[term], i)
 				}
@@ -410,7 +410,7 @@ func (cfg *config) checkOneLeader() int {
 
 // check that everyone agrees on the term.
 func (cfg *config) checkTerms() int {
-	DPrintf("checking terms \n")
+
 	term := -1
 	for i := 0; i < cfg.n; i++ {
 		if cfg.connected[i] {

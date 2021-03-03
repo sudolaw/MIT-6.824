@@ -31,7 +31,7 @@ func TestInitialElection2A(t *testing.T) {
 	// is a leader elected?
 	cfg.checkOneLeader()
 
-	fmt.Printf("check one learder is done")
+	fmt.Println("check one learder is done")
 
 	// sleep a bit to avoid racing with followers learning of the
 	// election, then check that all peers agree on the term.
@@ -41,7 +41,7 @@ func TestInitialElection2A(t *testing.T) {
 		t.Fatalf("term is %v, but should be at least 1", term1)
 	}
 
-	fmt.Printf("checking done")
+	fmt.Println("checking done")
 
 	// does the leader+term stay the same if there is no network failure?
 	time.Sleep(2 * RaftElectionTimeout)
@@ -65,20 +65,20 @@ func TestReElection2A(t *testing.T) {
 
 	leader1 := cfg.checkOneLeader()
 
-	fmt.Printf("after first check")
+	fmt.Println("after first check")
 
 	// if the leader disconnects, a new one should be elected.
 	cfg.disconnect(leader1)
 	cfg.checkOneLeader()
 
-	fmt.Printf("after kill and check")
+	fmt.Println("after kill and check")
 
 	// if the old leader rejoins, that shouldn't
 	// disturb the new leader.
 	cfg.connect(leader1)
 	leader2 := cfg.checkOneLeader()
 
-	fmt.Printf("rebirth and check")
+	fmt.Println("rebirth and check")
 	// if there's no quorum, no leader should
 	// be elected.
 	cfg.disconnect(leader2)

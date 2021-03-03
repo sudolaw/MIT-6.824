@@ -41,7 +41,6 @@ import (
 // snapshots) on the applyCh, but set CommandValid to false for these
 // other uses.
 //
-
 type ApplyMsg struct {
 	CommandValid bool
 	Command      interface{}
@@ -95,12 +94,15 @@ var leTer sync.Mutex
 // believes it is the leader.
 func (rf *Raft) GetState() (int, bool) {
 
-	leTer.Lock()
 	ts.Lock()
+
+	leTer.Lock()
+
 	term := rf.term
-	ts.Unlock()
+
 	isleader := rf.isLeader
 	leTer.Unlock()
+	ts.Unlock()
 
 	// Your code here (2A).
 	return term, isleader
@@ -188,15 +190,17 @@ var ts sync.Mutex
 
 //AppendEntryReply is
 func (rf *Raft) AppendEntryReply(args *AppendEntryArgs, reply *AppendEntryReply) {
-	if rf.me != args.Candidateid {
-		reply.Rep = true
-		ts.Lock()
-		rf.timestamp = time.Now()
-		rand := (150 + rand.Intn(150))
-		rf.timep = time.Duration(rand) * time.Millisecond
-		rf.term = args.Index
-		ts.Unlock()
-	}
+	var inlock sync.Mutex
+
+	inlock.Lock()
+
+	rf.timestamp = time.Now()
+	rand := (150 + rand.Intn(150))
+	rf.timep = time.Duration(rand) * time.Millisecond
+	rf.term = args.Index
+	inlock.Unlock()
+
+	reply.Rep = true
 
 }
 
@@ -208,14 +212,17 @@ func (rf *Raft) AppendEntrymaster(server int, args *AppendEntryArgs, reply *Appe
 
 //AppendEngine is
 func (rf *Raft) AppendEngine() {
-
+	Dprintf("[%v] we have started appending", rf.me)
 	for {
+
 		for x := range rf.peers {
+
 			ts.Lock()
 			func(xan int) {
 				args := AppendEntryArgs{}
 
 				args.Index = rf.term
+				args.Candidateid = rf.me
 
 				reply := AppendEntryReply{}
 				rf.AppendEntrymaster(xan, &args, &reply)
@@ -252,7 +259,8 @@ type RequestVoteReply struct {
 //
 func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 	// Your code here (2A, 2B).
-	if rf.term < args.Term {
+	Dprintf("[%v] my  Term is %v", rf.me, rf.term)
+	if rf.term <= args.Term {
 		reply.Reply = true
 	} else {
 		reply.Reply = false
@@ -292,7 +300,7 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 //
 func (rf *Raft) sendRequestVote(server int, args *RequestVoteArgs, reply *RequestVoteReply) bool {
 	ok := rf.peers[server].Call("Raft.RequestVote", args, reply)
-	Dprintf("[%v] reply for vote is  : %v", rf.me, reply.Reply)
+	Dprintf("[%v] reply for vote is  : %v", server, reply.Reply)
 	return ok
 }
 
@@ -411,7 +419,8 @@ func (rf *Raft) callElection() {
 		rf.isLeader = true
 
 		go rf.AppendEngine()
-		Dprintf("[%v] won elction_____%v", rf.me, rf.term)
+
+		Dprintf("[%v] won elction_____%v with %v", rf.me, rf.term, rf.isLeader)
 
 	} else {
 		leTer.Lock()
