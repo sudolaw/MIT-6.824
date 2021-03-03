@@ -187,10 +187,10 @@ type AppendEntryReply struct {
 }
 
 var ts sync.Mutex
+var inlock sync.Mutex
 
 //AppendEntryReply is
 func (rf *Raft) AppendEntryReply(args *AppendEntryArgs, reply *AppendEntryReply) {
-	var inlock sync.Mutex
 
 	inlock.Lock()
 
@@ -259,7 +259,9 @@ type RequestVoteReply struct {
 //
 func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 	// Your code here (2A, 2B).
+
 	Dprintf("[%v] my  Term is %v", rf.me, rf.term)
+
 	if rf.term <= args.Term {
 		reply.Reply = true
 	} else {
