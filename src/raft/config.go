@@ -392,6 +392,7 @@ func (cfg *config) checkOneLeader() int {
 
 		lastTermWithLeader := -1
 		for term, leaders := range leaders {
+			Dprintf("*************** %v*************", leaders)
 			if len(leaders) > 1 {
 				cfg.t.Fatalf("term %d has %d (>1) leaders", term, len(leaders))
 			}
@@ -427,14 +428,18 @@ func (cfg *config) checkTerms() int {
 
 // check that there's no leader
 func (cfg *config) checkNoLeader() {
+	fmt.Println("no leader beggins")
 	for i := 0; i < cfg.n; i++ {
+		fmt.Println("we are here")
 		if cfg.connected[i] {
+			fmt.Println("getting state")
 			_, is_leader := cfg.rafts[i].GetState()
 			if is_leader {
 				cfg.t.Fatalf("expected no leader, but %v claims to be leader", i)
 			}
 		}
 	}
+	fmt.Println("no leader ends")
 }
 
 // how many servers think a log entry is committed?

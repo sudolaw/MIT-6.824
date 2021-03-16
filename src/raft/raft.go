@@ -20,6 +20,7 @@ package raft
 import (
 	//	"bytes"
 
+	"fmt"
 	"log"
 	"math/rand"
 	"sync"
@@ -80,6 +81,7 @@ type Raft struct {
 	timestamp time.Time
 	timep     time.Duration
 	state     string
+	lockTerm  int
 
 	// Your data here (2A, 2B, 2C).
 	// Look at the paper's Figure 2 for a description of what
@@ -193,14 +195,20 @@ var inlock sync.Mutex
 func (rf *Raft) AppendEntryReply(args *AppendEntryArgs, reply *AppendEntryReply) {
 
 	inlock.Lock()
+	ts.Lock()
+	if rf.term < args.Index {
+		rf.isLeader = false
+		rf.term = args.Index
 
+	}
+	rf.lockTerm = args.Index + 1
 	rf.timestamp = time.Now()
 	rand := (150 + rand.Intn(150))
 	rf.timep = time.Duration(rand) * time.Millisecond
 	rf.term = args.Index
-	inlock.Unlock()
-
 	reply.Rep = true
+	ts.Unlock()
+	inlock.Unlock()
 
 }
 
@@ -211,26 +219,25 @@ func (rf *Raft) AppendEntrymaster(server int, args *AppendEntryArgs, reply *Appe
 }
 
 //AppendEngine is
-func (rf *Raft) AppendEngine() {
+func (rf *Raft) AppendEngine(lab, laf int) {
 	Dprintf("[%v] we have started appending", rf.me)
 	for {
 
 		for x := range rf.peers {
 
-			ts.Lock()
 			func(xan int) {
 				args := AppendEntryArgs{}
 
-				args.Index = rf.term
-				args.Candidateid = rf.me
+				args.Index = laf
+				args.Candidateid = lab
 
 				reply := AppendEntryReply{}
 				rf.AppendEntrymaster(xan, &args, &reply)
 
 			}(x)
-			ts.Unlock()
 
 		}
+		time.Sleep(5 * time.Millisecond)
 	}
 
 }
@@ -262,7 +269,15 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 
 	Dprintf("[%v] my  Term is %v", rf.me, rf.term)
 
-	if rf.term <= args.Term {
+	inlock.Lock()
+
+	rf.timestamp = time.Now()
+	rand := (150 + rand.Intn(150) + 10000)
+	rf.timep = time.Duration(rand) * time.Millisecond
+
+	inlock.Unlock()
+
+	if rf.term < args.Term || args.Candidateid == rf.me {
 		reply.Reply = true
 	} else {
 		reply.Reply = false
@@ -302,7 +317,7 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 //
 func (rf *Raft) sendRequestVote(server int, args *RequestVoteArgs, reply *RequestVoteReply) bool {
 	ok := rf.peers[server].Call("Raft.RequestVote", args, reply)
-	Dprintf("[%v] reply for vote is  : %v", server, reply.Reply)
+	Dprintf("[%v]:[%v] reply for vote is  : %v", rf.me, server, reply.Reply)
 	return ok
 }
 
@@ -363,18 +378,24 @@ func (rf *Raft) ticker() {
 		// be started and to randomize sleeping time using
 		// time.Sleep().
 		func() {
-			jac := time.Now()
+
 			ts.Lock()
+			jac := time.Now()
 			diff := jac.Sub(rf.timestamp)
+
 			if diff > rf.timep && rf.isLeader != true {
 
+				jaE := time.Now()
+				Dprintf("[%v] election beggins is : %v  \n", rf.me, time.Now())
 				rf.callElection()
+				Dprintf("[%v] election ends is : %v  \n", rf.me, time.Now())
+				Dprintf("[%v] election timr is : %v  \n", rf.me, time.Now().Sub(jaE))
 			}
 			ts.Unlock()
 
 		}()
 
-		time.Sleep(50 * time.Millisecond)
+		time.Sleep(time.Millisecond)
 	}
 
 }
@@ -385,6 +406,8 @@ var mu sync.Mutex
 func (rf *Raft) callElection() {
 	leTer.Lock()
 	rf.term = rf.term + 1
+	rf.lockTerm = 0
+
 	leTer.Unlock()
 	count := 0
 	finished := 0
@@ -414,13 +437,21 @@ func (rf *Raft) callElection() {
 	}
 
 	elec.Lock()
-	for count < 2 || finished < 3 {
+	for count < len(rf.peers)/2 || finished < len(rf.peers) {
 		cond.Wait()
+		fmt.Printf("waiting")
 	}
-	if count >= 2 {
-		rf.isLeader = true
 
-		go rf.AppendEngine()
+	if count >= (len(rf.peers)/2)+1 && rf.lockTerm == 0 {
+		Dprintf("[%v] check check check  %v", rf.me, len(rf.peers)/2)
+		rf.isLeader = true
+		rf.lockTerm = rf.term
+
+		leTer.Lock()
+		name := rf.me
+		term := rf.term
+		leTer.Unlock()
+		go rf.AppendEngine(name, term)
 
 		Dprintf("[%v] won elction_____%v with %v", rf.me, rf.term, rf.isLeader)
 
@@ -463,6 +494,8 @@ func Make(peers []*labrpc.ClientEnd, me int,
 	rf.term = 0
 	rf.timep = time.Duration((rf.me+1)*200) * time.Millisecond
 	rf.timestamp = time.Now()
+	rf.lockTerm = 0
+	rf.isLeader = false
 
 	// Your initialization code here (2A, 2B, 2C).
 

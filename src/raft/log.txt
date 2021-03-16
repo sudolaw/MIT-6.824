@@ -1,125 +1,172 @@
 warning: only one CPU, which may conceal locking bugs
-2021/03/03 20:35:29 [0] Raft started  
-2021/03/03 20:35:29 [1] Raft started  
-2021/03/03 20:35:29 [2] Raft started  
+2021/03/16 23:42:15 [0] Raft started  
+2021/03/16 23:42:15 [1] Raft started  
+2021/03/16 23:42:15 [2] Raft started  
 Test (2A): initial election ...
 Check one learder started
-2021/03/03 20:35:29 [1] here we go lets start ticker 
-2021/03/03 20:35:29 [0] here we go lets start ticker 
-2021/03/03 20:35:29 [2] here we go lets start ticker 
-2021/03/03 20:35:30 [0] election started count is : 0  
-2021/03/03 20:35:30 [2] my  Term is 0
-2021/03/03 20:35:30 [2] voted for 0 term 1
-2021/03/03 20:35:30 [0] my  Term is 1
-2021/03/03 20:35:30 [0] voted for 0 term 1
-2021/03/03 20:35:30 [1] my  Term is 0
-2021/03/03 20:35:30 [1] voted for 0 term 1
-2021/03/03 20:35:30 [1] reply for vote is  : true
-2021/03/03 20:35:30 [0] reply for vote is  : true
-2021/03/03 20:35:30 [2] reply for vote is  : true
-2021/03/03 20:35:30 [0] won elction_____1 with true
-2021/03/03 20:35:30 [0] we have started appending
+2021/03/16 23:42:15 [2] here we go lets start ticker 
+2021/03/16 23:42:15 [0] here we go lets start ticker 
+2021/03/16 23:42:15 [1] here we go lets start ticker 
+2021/03/16 23:42:15 [0] election beggins is : 2021-03-16 23:42:15.637420078 +0530 IST m=+0.209196817  
+2021/03/16 23:42:15 [0] election started count is : 0  
+2021/03/16 23:42:15 [0] my  Term is 1
+2021/03/16 23:42:15 [0] voted for 0 term 1
+2021/03/16 23:42:15 [0]:[0] reply for vote is  : true
+waiting2021/03/16 23:42:15 [1] my  Term is 0
+2021/03/16 23:42:15 [1] voted for 0 term 1
+2021/03/16 23:42:15 [0]:[1] reply for vote is  : true
+waiting2021/03/16 23:42:15 [2] my  Term is 0
+2021/03/16 23:42:15 [2] voted for 0 term 1
+2021/03/16 23:42:15 [0]:[2] reply for vote is  : true
+waiting2021/03/16 23:42:15 [0] check check check  1
+2021/03/16 23:42:15 [0] won elction_____1 with true
+2021/03/16 23:42:15 [0] election ends is : 2021-03-16 23:42:15.642689157 +0530 IST m=+0.214465898  
+2021/03/16 23:42:15 [0] election timr is : 5.301661ms  
+2021/03/16 23:42:15 [0] we have started appending
 checking -------------0 
 checking -------------1 
 checking -------------2 
+2021/03/16 23:42:15 *************** [0]*************
 check one learder is done
 checking done
 Check one learder started
 checking -------------0 
 checking -------------1 
 checking -------------2 
-  ... Passed --   3.2  3 1779  190356    0
-2021/03/03 20:35:32 [0] Raft started  
-2021/03/03 20:35:32 [1] Raft started  
-2021/03/03 20:35:32 [2] Raft started  
+2021/03/16 23:42:18 *************** [0]*************
+  ... Passed --   3.1  3 1116  119415    0
+2021/03/16 23:42:18 [0] Raft started  
+2021/03/16 23:42:18 [1] Raft started  
+2021/03/16 23:42:18 [2] Raft started  
+2021/03/16 23:42:18 [0] here we go lets start ticker 
+2021/03/16 23:42:18 [1] here we go lets start ticker 
 Test (2A): election after network failure ...
 Check one learder started
-2021/03/03 20:35:32 [0] here we go lets start ticker 
-2021/03/03 20:35:32 [1] here we go lets start ticker 
-2021/03/03 20:35:32 [2] here we go lets start ticker 
-2021/03/03 20:35:33 [0] election started count is : 0  
-2021/03/03 20:35:33 [2] my  Term is 0
-2021/03/03 20:35:33 [2] voted for 0 term 1
-2021/03/03 20:35:33 [0] my  Term is 1
-2021/03/03 20:35:33 [0] voted for 0 term 1
-2021/03/03 20:35:33 [1] my  Term is 0
-2021/03/03 20:35:33 [1] voted for 0 term 1
-2021/03/03 20:35:33 [1] reply for vote is  : true
-2021/03/03 20:35:33 [0] reply for vote is  : true
-2021/03/03 20:35:33 [2] reply for vote is  : true
-2021/03/03 20:35:33 [0] won elction_____1 with true
-2021/03/03 20:35:33 [0] we have started appending
+2021/03/16 23:42:18 [2] here we go lets start ticker 
+2021/03/16 23:42:18 [0] election beggins is : 2021-03-16 23:42:18.703316586 +0530 IST m=+3.275093356  
+2021/03/16 23:42:18 [0] election started count is : 0  
+2021/03/16 23:42:18 [2] my  Term is 0
+2021/03/16 23:42:18 [2] voted for 0 term 1
+2021/03/16 23:42:18 [1] my  Term is 0
+2021/03/16 23:42:18 [1] voted for 0 term 1
+2021/03/16 23:42:18 [0] my  Term is 1
+2021/03/16 23:42:18 [0] voted for 0 term 1
+2021/03/16 23:42:18 [0]:[0] reply for vote is  : true
+waiting2021/03/16 23:42:18 [0]:[1] reply for vote is  : true
+waiting2021/03/16 23:42:18 [0]:[2] reply for vote is  : true
+waiting2021/03/16 23:42:18 [0] check check check  1
+2021/03/16 23:42:18 [0] we have started appending
+2021/03/16 23:42:18 [0] won elction_____1 with true
+2021/03/16 23:42:18 [0] election ends is : 2021-03-16 23:42:18.716895739 +0530 IST m=+3.288672478  
+2021/03/16 23:42:18 [0] election timr is : 13.61388ms  
 checking -------------0 
 checking -------------1 
 checking -------------2 
+2021/03/16 23:42:18 *************** [0]*************
 after first check
 Check one learder started
+2021/03/16 23:42:19 [2] election beggins is : 2021-03-16 23:42:19.158046736 +0530 IST m=+3.729823478  
+2021/03/16 23:42:19 [2] election started count is : 0  
+2021/03/16 23:42:19 [1] my  Term is 1
+2021/03/16 23:42:19 [1] voted for 2 term 2
+2021/03/16 23:42:19 [2] my  Term is 2
+2021/03/16 23:42:19 [2] voted for 2 term 2
+2021/03/16 23:42:19 [2]:[2] reply for vote is  : true
+waiting2021/03/16 23:42:19 [2]:[1] reply for vote is  : true
+waiting2021/03/16 23:42:19 [2]:[0] reply for vote is  : false
+waiting2021/03/16 23:42:19 [2] check check check  1
+2021/03/16 23:42:19 [2] won elction_____2 with true
+2021/03/16 23:42:19 [2] election ends is : 2021-03-16 23:42:19.364836877 +0530 IST m=+3.936613878  
+2021/03/16 23:42:19 [2] election timr is : 206.912055ms  
+2021/03/16 23:42:19 [2] we have started appending
 checking -------------1 
 checking -------------2 
-2021/03/03 20:35:57 [1] election started count is : 0  
-2021/03/03 20:35:57 [1] my  Term is 2
-2021/03/03 20:35:57 [1] voted for 1 term 2
-2021/03/03 20:35:57 [1] reply for vote is  : true
-2021/03/03 20:35:57 [2] my  Term is 1
-2021/03/03 20:35:57 [2] voted for 1 term 2
-2021/03/03 20:35:57 [2] reply for vote is  : true
+2021/03/16 23:42:19 *************** [2]*************
+after kill and check
+Check one learder started
+checking -------------0 
 checking -------------1 
-2021/03/03 20:36:01 [0] reply for vote is  : false
-2021/03/03 20:36:01 [1] won elction_____2 with true
-2021/03/03 20:36:01 [1] we have started appending
-2021/03/03 20:36:01 [2] election started count is : 0  
-2021/03/03 20:36:01 [2] my  Term is 2
-2021/03/03 20:36:01 [2] voted for 2 term 2
-2021/03/03 20:36:01 [2] reply for vote is  : true
-2021/03/03 20:36:01 [1] my  Term is 2
-2021/03/03 20:36:01 [1] voted for 2 term 2
-2021/03/03 20:36:01 [1] reply for vote is  : true
-2021/03/03 20:36:07 [0] reply for vote is  : false
-2021/03/03 20:36:07 [2] won elction_____2 with true
-2021/03/03 20:36:07 [2] we have started appending
 checking -------------2 
---- FAIL: TestReElection2A (52.72s)
-    config.go:396: term 2 has 2 (>1) leaders
-2021/03/03 20:36:25 [0] Raft started  
-2021/03/03 20:36:25 [1] Raft started  
-2021/03/03 20:36:25 [2] Raft started  
-2021/03/03 20:36:25 [0] here we go lets start ticker 
-2021/03/03 20:36:25 [1] here we go lets start ticker 
-2021/03/03 20:36:25 [3] Raft started  
-2021/03/03 20:36:25 [2] here we go lets start ticker 
-2021/03/03 20:36:25 [3] here we go lets start ticker 
-2021/03/03 20:36:25 [4] Raft started  
-2021/03/03 20:36:25 [4] here we go lets start ticker 
-2021/03/03 20:36:25 [5] Raft started  
-2021/03/03 20:36:25 [5] here we go lets start ticker 
-2021/03/03 20:36:25 [6] Raft started  
-2021/03/03 20:36:25 [6] here we go lets start ticker 
+2021/03/16 23:42:19 *************** [0]*************
+2021/03/16 23:42:19 *************** [2]*************
+rebirth and check
+no leader beggins
+we are here
+we are here
+getting state
+we are here
+no leader ends
+Check one learder started
+checking -------------0 
+checking -------------1 
+2021/03/16 23:42:22 *************** [0]*************
+Check one learder started
+2021/03/16 23:42:22 [1] election beggins is : 2021-03-16 23:42:22.447662994 +0530 IST m=+7.019439780  
+2021/03/16 23:42:22 [1] election started count is : 0  
+2021/03/16 23:42:22 [1] my  Term is 2
+2021/03/16 23:42:22 [1] voted for 1 term 2
+2021/03/16 23:42:22 [1]:[1] reply for vote is  : true
+2021/03/16 23:42:22 [2] my  Term is 2
+2021/03/16 23:42:22 [2] voted for 1 term 2
+2021/03/16 23:42:22 [1]:[2] reply for vote is  : false
+waitingwaiting2021/03/16 23:42:22 [0] my  Term is 1
+2021/03/16 23:42:22 [0] voted for 1 term 2
+2021/03/16 23:42:22 [1]:[0] reply for vote is  : true
+waiting2021/03/16 23:42:22 [1] check check check  1
+2021/03/16 23:42:22 [1] won elction_____2 with true
+2021/03/16 23:42:22 [1] election ends is : 2021-03-16 23:42:22.457865718 +0530 IST m=+7.029642478  
+2021/03/16 23:42:22 [1] election timr is : 10.257342ms  
+2021/03/16 23:42:22 [1] we have started appending
+checking -------------0 
+checking -------------1 
+checking -------------2 
+2021/03/16 23:42:22 *************** [1 2]*************
+--- FAIL: TestReElection2A (4.48s)
+    config.go:397: term 2 has 2 (>1) leaders
+2021/03/16 23:42:22 [0] Raft started  
+2021/03/16 23:42:22 [0] here we go lets start ticker 
+2021/03/16 23:42:22 [1] Raft started  
+2021/03/16 23:42:22 [1] here we go lets start ticker 
+2021/03/16 23:42:22 [2] Raft started  
+2021/03/16 23:42:22 [3] Raft started  
+2021/03/16 23:42:22 [2] here we go lets start ticker 
+2021/03/16 23:42:22 [4] Raft started  
+2021/03/16 23:42:22 [5] Raft started  
+2021/03/16 23:42:22 [4] here we go lets start ticker 
+2021/03/16 23:42:22 [3] here we go lets start ticker 
+2021/03/16 23:42:22 [5] here we go lets start ticker 
+2021/03/16 23:42:22 [6] Raft started  
+2021/03/16 23:42:22 [6] here we go lets start ticker 
 Test (2A): multiple elections ...
 Check one learder started
-2021/03/03 20:36:25 [0] election started count is : 0  
-2021/03/03 20:36:25 [2] my  Term is 0
-2021/03/03 20:36:25 [2] voted for 0 term 1
-2021/03/03 20:36:25 [0] my  Term is 1
-2021/03/03 20:36:25 [0] voted for 0 term 1
-2021/03/03 20:36:25 [5] my  Term is 0
-2021/03/03 20:36:25 [5] voted for 0 term 1
-2021/03/03 20:36:25 [5] reply for vote is  : true
-2021/03/03 20:36:25 [3] my  Term is 0
-2021/03/03 20:36:25 [3] voted for 0 term 1
-2021/03/03 20:36:25 [3] reply for vote is  : true
-2021/03/03 20:36:25 [2] reply for vote is  : true
-2021/03/03 20:36:25 [0] won elction_____1 with true
-2021/03/03 20:36:25 [0] we have started appending
-2021/03/03 20:36:25 [4] my  Term is 0
-2021/03/03 20:36:25 [4] voted for 0 term 1
-2021/03/03 20:36:25 [4] reply for vote is  : true
-2021/03/03 20:36:25 [6] my  Term is 0
-2021/03/03 20:36:25 [6] voted for 0 term 1
-2021/03/03 20:36:25 [6] reply for vote is  : true
-2021/03/03 20:36:25 [0] reply for vote is  : true
-2021/03/03 20:36:25 [1] my  Term is 0
-2021/03/03 20:36:25 [1] voted for 0 term 1
-2021/03/03 20:36:25 [1] reply for vote is  : true
+2021/03/16 23:42:23 [0] election beggins is : 2021-03-16 23:42:23.186503531 +0530 IST m=+7.758280271  
+2021/03/16 23:42:23 [0] election started count is : 0  
+2021/03/16 23:42:23 [6] my  Term is 0
+2021/03/16 23:42:23 [6] voted for 0 term 1
+2021/03/16 23:42:23 [0]:[6] reply for vote is  : true
+waiting2021/03/16 23:42:23 [2] my  Term is 0
+2021/03/16 23:42:23 [2] voted for 0 term 1
+2021/03/16 23:42:23 [0] my  Term is 1
+2021/03/16 23:42:23 [0] voted for 0 term 1
+2021/03/16 23:42:23 [1] my  Term is 0
+2021/03/16 23:42:23 [1] voted for 0 term 1
+2021/03/16 23:42:23 [0]:[2] reply for vote is  : true
+waiting2021/03/16 23:42:23 [0]:[0] reply for vote is  : true
+waiting2021/03/16 23:42:23 [0]:[1] reply for vote is  : true
+waiting2021/03/16 23:42:23 [5] my  Term is 0
+2021/03/16 23:42:23 [5] voted for 0 term 1
+2021/03/16 23:42:23 [3] my  Term is 0
+2021/03/16 23:42:23 [3] voted for 0 term 1
+2021/03/16 23:42:23 [0]:[3] reply for vote is  : true
+waiting2021/03/16 23:42:23 [0]:[5] reply for vote is  : true
+waiting2021/03/16 23:42:23 [4] my  Term is 0
+2021/03/16 23:42:23 [4] voted for 0 term 1
+2021/03/16 23:42:23 [0]:[4] reply for vote is  : true
+waiting2021/03/16 23:42:23 [0] check check check  3
+2021/03/16 23:42:23 [0] won elction_____1 with true
+2021/03/16 23:42:23 [0] election ends is : 2021-03-16 23:42:23.199327318 +0530 IST m=+7.771104064  
+2021/03/16 23:42:23 [0] election timr is : 12.854977ms  
+2021/03/16 23:42:23 [0] we have started appending
 checking -------------0 
 checking -------------1 
 checking -------------2 
@@ -127,8 +174,38 @@ checking -------------3
 checking -------------4 
 checking -------------5 
 checking -------------6 
+2021/03/16 23:42:23 *************** [0]*************
 Check one learder started
-checking -------------0 
-checking -------------1 
-signal: interrupt
-FAIL	6.824/raft	59.655s
+2021/03/16 23:42:23 [3] election beggins is : 2021-03-16 23:42:23.646752839 +0530 IST m=+8.218529582  
+2021/03/16 23:42:23 [3] election started count is : 0  
+2021/03/16 23:42:23 [3] my  Term is 2
+2021/03/16 23:42:23 [3] voted for 3 term 2
+2021/03/16 23:42:23 [2] my  Term is 1
+2021/03/16 23:42:23 [2] voted for 3 term 2
+2021/03/16 23:42:23 [3]:[2] reply for vote is  : true
+waiting2021/03/16 23:42:23 [3]:[3] reply for vote is  : true
+waiting2021/03/16 23:42:23 [1] my  Term is 1
+2021/03/16 23:42:23 [1] voted for 3 term 2
+2021/03/16 23:42:23 [3]:[1] reply for vote is  : true
+waiting2021/03/16 23:42:23 [6] my  Term is 1
+2021/03/16 23:42:23 [6] voted for 3 term 2
+2021/03/16 23:42:23 [3]:[6] reply for vote is  : true
+waitingchecking -------------1 
+2021/03/16 23:42:24 [3]:[0] reply for vote is  : false
+waiting2021/03/16 23:42:24 [3]:[4] reply for vote is  : false
+waiting2021/03/16 23:42:29 [3]:[5] reply for vote is  : false
+waiting2021/03/16 23:42:29 [3] check check check  3
+2021/03/16 23:42:29 [3] won elction_____2 with true
+2021/03/16 23:42:29 [3] election ends is : 2021-03-16 23:42:29.422420455 +0530 IST m=+13.994197196  
+2021/03/16 23:42:29 [3] election timr is : 5.775700922s  
+2021/03/16 23:42:29 [3] we have started appending
+2021/03/16 23:42:29 [5] election beggins is : 2021-03-16 23:42:29.42362616 +0530 IST m=+13.995402898  
+2021/03/16 23:42:29 [5] election started count is : 0  
+2021/03/16 23:42:29 [5]:[2] reply for vote is  : false
+waiting2021/03/16 23:42:30 [5]:[5] reply for vote is  : false
+waiting2021/03/16 23:42:31 [5]:[0] reply for vote is  : false
+waiting2021/03/16 23:42:31 [5]:[6] reply for vote is  : false
+waiting2021/03/16 23:42:33 [5]:[1] reply for vote is  : false
+waiting2021/03/16 23:42:34 [5]:[3] reply for vote is  : false
+waitingsignal: interrupt
+FAIL	6.824/raft	19.751s
